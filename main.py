@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from typing import Union
 from primePy import primes
+import cv2
 
 app = FastAPI()
 
@@ -12,9 +12,17 @@ async def root():
 
 @app.get("/prime/{number}")
 async def isprimenum(number: int):
-    if isprimenum(number):  return {"message": "Liczba jest pierwsza"}
+    if primes.check(number):  return {"message": "Liczba jest pierwsza"}
     else:
         return {"message": "Liczba nie jest pierwsza"}
+
+@app.get("/inversion/{image}")
+async def inversepicture(image):
+    image = cv2.imread(image)
+    image = ~image
+    cv2.imwrite("img_inverted.jpg", image)
+    return {"message": "Obrazek jest teraz nawiedzony"}
+
 
 @app.get("/hello/{name}")
 async def say_hello(name: str):
